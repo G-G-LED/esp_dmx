@@ -106,9 +106,9 @@ static size_t rdm_rhd_set_record_sensors(
 static size_t rdm_rhd_get_sensor_definition(
     dmx_port_t dmx_num, const rdm_parameter_definition_t *definition,
     const rdm_header_t *header) {
-  // Verify the requested sensor num is valid
+  // Verify the requested sensor num is valid (RCD changed set to get)
   uint8_t sensor_num;
-  if (!rdm_read_pd(dmx_num, definition->set.request.format, &sensor_num,
+  if (!rdm_read_pd(dmx_num, definition->get.request.format, &sensor_num,
                    sizeof(sensor_num))) {
     return rdm_write_nack_reason(dmx_num, header, RDM_NR_FORMAT_ERROR);
   }
@@ -151,14 +151,14 @@ bool rdm_register_sensor_definition(dmx_port_t dmx_num, rdm_callback_t cb,
   }
 
   // Set sensor definition numbers to 0xff to flag they haven't been defined
-  if (first_time_func_called) {
+  //if (first_time_func_called) {
     rdm_sensor_definition_t *sensor_defs =
         dmx_parameter_get_data(dmx_num, RDM_SUB_DEVICE_ROOT, pid);
     assert(sensor_defs != NULL);
     for (int i = 0; i < sensor_count; ++i) {
       sensor_defs[i].num = 0xff;
     }
-  }
+  //}
 
   // Define the parameter
   static const rdm_parameter_definition_t definition = {
