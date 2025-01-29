@@ -664,6 +664,48 @@ enum {
   RDM_RESET_TYPE_COLD = 0xff,
 };
 
+/********************************************************/
+/* Table A-8: Lamp State Defines                        */
+/********************************************************/
+/** @brief  enums used in rdm_lamp_state_t. 
+ * For use with RDM_PID_LAMP_STATE.
+ */
+
+typedef enum rdm_lamp_state_t {
+   /** @brief No demonstrable light output */
+   RDM_LAMP_OFF = 0x00,
+   /** @brief Lamp is on and outputting light */
+   RDM_LAMP_ON = 0x01,
+   /** @brief Arc-Lamp ignite */
+   RDM_LAMP_STRIKE = 0x02,
+   /** @brief Arc-Lamp Reduced Power Mode */
+   RDM_LAMP_STANDBY = 0x03,
+   /** @brief Lamp not installed */
+   RDM_LAMP_NOT_PRESENT = 0x04,
+   /** @brief Lamp error of some kind */
+   RDM_LAMP_ERROR = 0x7F
+   /** @brief Manufacturer-Specific States 0x80-0xDF */
+} rdm_lamp_state_t;
+
+/********************************************************/
+/* Table A-9: Lamp On Mode Defines                      */
+/********************************************************/
+
+/** @brief  enums used in rdm_lamp_on_mode_t. 
+ * For use with RDM_PID_LAMP_ON_MODE.
+ */
+typedef enum rdm_lamp_on_mode_t {
+   /** @brief Lamp Stays off until directly instructed to Strike. */
+   RDM_LAMP_ON_MODE_OFF = 0x00, 
+   /** @brief Lamp Strikes upon receiving a DMX512 signal. */
+   RDM_LAMP_ON_MODE_DMX = 0x01, 
+   /** @brief Lamp Strikes automatically at Power-up. */
+   RDM_LAMP_ON_MODE_ON = 0x02, 
+   /** @brief Lamp Strikes after Calibration or Homing procedure. */
+   RDM_LAMP_ON_MODE_AFTER_CAL = 0x03 
+   /** @brief Manufacturer-Specific Modes 0x80-0xDF */
+} rdm_lamp_on_mode_t;
+
 /** @brief Responders and controllers identify themselves with a 48-bit Unique
  * ID (UID). The UID consists of a 16-bit ESTA assigned manufacturer ID with a
  * 32-bit device ID.*/
