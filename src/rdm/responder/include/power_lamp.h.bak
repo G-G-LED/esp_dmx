@@ -90,9 +90,9 @@ size_t rdm_get_lamp_hours(dmx_port_t dmx_num, uint32_t *lamp_hours);
 bool rdm_set_lamp_hours(dmx_port_t dmx_num, uint32_t lamp_hours);
 
 /**
- * @brief Registers the default response to RDM_PID_LAMP_STATE requests. This
+ * @brief Registers the default response to RDM_PID_LAMP_ON_MODE requests. This
  * function attempts to load a value from NVS. If none is found, the default is
- * LAMP_OFF (0x00).
+ * LAMP_ON_MODE_OFF (0x00).
  *
  * @param dmx_num The DMX port number.
  * @param cb A callback which is called upon receiving a request for this PID.

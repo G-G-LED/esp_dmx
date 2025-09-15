@@ -76,7 +76,7 @@ size_t dmx_write_offset(dmx_port_t dmx_num, size_t offset, const void *source,
   if (dmx_status == DMX_STATUS_SENDING) {
     rdm_header_t header;
     taskENTER_CRITICAL(DMX_SPINLOCK(dmx_num));
-    const bool is_rdm = rdm_read_header(dmx_num, &header, NULL);   //  !!!!! CHECK THIS !!!!!
+    const bool is_rdm = rdm_read_header(dmx_num, &header);
     taskEXIT_CRITICAL(DMX_SPINLOCK(dmx_num));
     if (is_rdm) {
       return 0;  // Do not allow asynchronous writes while sending RDM
@@ -318,7 +318,7 @@ size_t dmx_send_num(dmx_port_t dmx_num, size_t size) {
   bool is_rdm;
   rdm_header_t header;
   taskENTER_CRITICAL(DMX_SPINLOCK(dmx_num));
-  is_rdm = rdm_read_header(dmx_num, &header, NULL);   //  !!!!! CHECK THIS !!!!!
+  is_rdm = rdm_read_header(dmx_num, &header);
   taskEXIT_CRITICAL(DMX_SPINLOCK(dmx_num));
   if (is_rdm && !rdm_cc_is_valid(header.cc)) {
     is_rdm = false;

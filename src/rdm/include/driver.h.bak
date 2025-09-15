@@ -26,7 +26,7 @@ extern "C"
      * @return true if the packet is a valid RDM packet.
      * @return false if the packet is not a valid RDM packet.
      */
-    bool rdm_read_header(dmx_port_t dmx_num, rdm_header_t *header, dmx_packet_t *packet);
+    bool rdm_read_header(dmx_port_t dmx_num, rdm_header_t *header);
 
     /**
      * @brief Reads RDM parameter data from the DMX driver buffer. This function

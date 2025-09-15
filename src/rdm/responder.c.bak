@@ -9,11 +9,9 @@
 #include "rdm/include/types.h"
 #include "rdm/include/uid.h"
 
-// bool rdm_send_response(dmx_port_t dmx_num, dmx_packet_t *packet) {
 bool rdm_send_response(dmx_port_t dmx_num) {
   DMX_CHECK(dmx_num < DMX_NUM_MAX, 0, "dmx_num error");
   DMX_CHECK(dmx_driver_is_installed(dmx_num), 0, "driver is not installed");
-  // DMX_CHECK(packet != NULL, 0, "packet NULL pointer");
 
   dmx_driver_t *const driver = dmx_driver[dmx_num];
 
@@ -25,13 +23,11 @@ bool rdm_send_response(dmx_port_t dmx_num) {
   bool is_rdm;
   rdm_header_t header;
   taskENTER_CRITICAL(DMX_SPINLOCK(dmx_num));
-  is_rdm = rdm_read_header(dmx_num, &header, NULL);  //back to what it was before I added: packet);
+  is_rdm = rdm_read_header(dmx_num, &header);
   taskEXIT_CRITICAL(DMX_SPINLOCK(dmx_num));
   if (!rdm_cc_is_valid(header.cc)) {
     is_rdm = false;  // Packet is not RDM if CC is invalid
-  } //else if (packet->sc) {
-
-  //}
+  }
   const rdm_uid_t *this_uid = rdm_uid_get(dmx_num);
   if (is_rdm) {
     // Packet is an RDM request packet
@@ -138,7 +134,7 @@ bool rdm_send_response(dmx_port_t dmx_num) {
       dmx_parameter_get_entry(dmx_num, header.sub_device, header.pid);
   if (parameter != NULL && parameter->callback != NULL) {
     rdm_header_t response_header;
-    if (!rdm_read_header(dmx_num, &response_header, NULL)) {          //packet   CHECK THIS  !!!!!
+    if (!rdm_read_header(dmx_num, &response_header)) {
       // Set the response header to NULL if an RDM header can't be read
       memset(&response_header, 0, sizeof(response_header));
     }

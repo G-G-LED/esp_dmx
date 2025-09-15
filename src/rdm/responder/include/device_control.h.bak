@@ -75,42 +75,6 @@ bool rdm_register_reset_device(dmx_port_t dmx_num, rdm_callback_t cb,
  */
 size_t rdm_get_reset_device(dmx_port_t dmx_num, uint8_t *reset);
 
-/**
- * @brief Registers the default response to RDM_PID_POWER_STATE requests. This
- * function attempts to load a value from NVS. If none is found, the default is
- * POWER_STATE_NORMAL (0xFF).
- *
- * @param dmx_num The DMX port number.
- * @param cb A callback which is called upon receiving a request for this PID.
- * @param[inout] context A pointer to context which is used in the user
- * callback.
- * @return true if the PID response was registered.
- * @return false if there is not enough memory to register additional
- * responses.
- */
-bool rdm_register_power_state(dmx_port_t dmx_num, rdm_callback_t cb,
-                               void *context);
-
-/**
- * @brief Gets a copy of the power state for this device.
- *
- * @param dmx_num The DMX port number.
- * @param[out] power_state A pointer to a buffer which will store the power
- * state.
- * @return the number of bytes written to power_state.
- */
-size_t rdm_get_power_state(dmx_port_t dmx_num, rdm_power_state_t *power_state);
-
-/**
- * @brief Sets the power state for this device.
- *
- * @param dmx_num The DMX port number.
- * @param power_state The power state to which to set this device.
- * @return true on success.
- * @return false on failure.
- */
-bool rdm_set_power_state(dmx_port_t dmx_num, rdm_power_state_t power_state);
-
 #ifdef __cplusplus
 }
 #endif
