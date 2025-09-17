@@ -222,7 +222,7 @@ bool dmx_driver_install(dmx_port_t dmx_num, const dmx_config_t *config,
   if (config->queue_size_max > 0) {
     rdm_register_queued_message(dmx_num, config->queue_size_max, NULL, NULL);
   }
-  rdm_register_manufacturer_label(dmx_num, RDM_MANUFACTURER_LABEL, NULL, NULL);
+  rdm_register_manufacturer_label(dmx_num, (char *)RDM_MANUFACTURER_LABEL, NULL, NULL);
   if (uses_dmx > 0) {
     rdm_register_dmx_personality(dmx_num, personality_count, NULL, NULL);
     rdm_register_dmx_personality_description(dmx_num, personality_description,
