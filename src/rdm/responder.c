@@ -1,7 +1,7 @@
 #include "rdm/responder.h"
 
 #include <string.h>
-
+#include "esp_log.h"
 #include "dmx/hal/include/timer.h"
 #include "dmx/hal/include/uart.h"
 #include "dmx/include/driver.h"
