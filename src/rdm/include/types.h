@@ -757,8 +757,8 @@ typedef struct __attribute__((packed)) rdm_uid_t {
 /** @brief A struct which stores RDM packet header information. Header
  * information contains metadata about the packet message data block.*/
 typedef struct __attribute__((packed)) rdm_header_t {
-  uint8_t : 8;  // RDM start code.
-  uint8_t : 8;  // RDM sub-start code.
+  uint8_t rdm_major: 8;  // RDM start code.
+  uint8_t rdm_minor: 8;  // RDM sub-start code.
   /** @brief The message length value is defined as the number of slots in the
      RDM packet including the start code and excluding the Checksum. Each slot
      is an 8-bit value.*/
