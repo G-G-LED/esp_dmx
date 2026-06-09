@@ -1,7 +1,5 @@
-#include "rdm/responder.h"
-
 #include <string.h>
-#include "esp_log.h"
+#include "rdm/responder.h"
 #include "dmx/hal/include/timer.h"
 #include "dmx/hal/include/uart.h"
 #include "dmx/include/driver.h"
@@ -112,14 +110,6 @@ bool rdm_send_response(dmx_port_t dmx_num) {
 
   // Send the RDM response
   if (packet_size > 0) {
-        ESP_LOGI("RDM", "packet_size=%d pid=0x%04X", packet_size, header.pid);
-        ESP_LOGI("RDM", "Sending response: packet_size=%d, data[0..5]=%02X %02X %02X %02X %02X %02X",
-             packet_size,
-             driver->dmx.data[0], driver->dmx.data[1], driver->dmx.data[2],
-             driver->dmx.data[3], driver->dmx.data[4], driver->dmx.data[5]);
-    ESP_LOGI("RDM", "data[23..27]=%02X %02X %02X %02X %02X",
-             driver->dmx.data[23], driver->dmx.data[24], driver->dmx.data[25],
-             driver->dmx.data[26], driver->dmx.data[27]);
     if (!dmx_send_num(dmx_num, packet_size)) {
       rdm_set_boot_loader(dmx_num);
       // Generate information for the warning message if a response wasn't sent
