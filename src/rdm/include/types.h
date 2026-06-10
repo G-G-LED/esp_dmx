@@ -558,10 +558,24 @@ typedef enum rdm_units_t {
 typedef enum rdm_prefix_t {
   /** @brief Multiply by 1.*/
   RDM_PREFIX_NONE = 0x00,
+  /** @brief Multiply by 10E-1.*/
+  RDM_PREFIX_DECI = 0x01,
+  /** @brief Multiply by 10E-2.*/
+  RDM_PREFIX_CENTI = 0x02,
+  /** @brief Multiply by 10E-3.*/
+  RDM_PREFIX_MILLI = 0x03,
+  /** @brief Multiply by 10E-6.*/
+  RDM_PREFIX_MICRO = 0x04,
   /** @brief Multiply by 10E-24.*/
   RDM_PREFIX_YOCTO = 0x0a,
   /** @brief Multiply by 10E+1.*/
   RDM_PREFIX_DECA = 0x11,
+  /** @brief Multiply by 10E+2.*/
+  RDM_PREFIX_HECTO = 0x12,
+  /** @brief Multiply by 10E+3.*/
+  RDM_PREFIX_KILO = 0x13,
+  /** @brief Multiply by 10E+6.*/
+  RDM_PREFIX_MEGA = 0x14,
   /** @brief Multiply by 10E+24.*/
   RDM_PREFIX_YOTTA = 0x1a
 } rdm_prefix_t;
@@ -706,6 +720,27 @@ typedef enum rdm_lamp_on_mode_t {
    /** @brief Manufacturer-Specific Modes 0x80-0xDF */
 } rdm_lamp_on_mode_t;
 
+/********************************************************/
+/* Table A-11: Power State Defines                        */
+/********************************************************/
+/** @brief  enums used in rdm_power_state_t. 
+ * For use with RDM_PID_POWER_STATE.
+ */
+
+typedef enum rdm_power_state_t {
+   /** @brief Completely disengages power to device. Device can no longer respond. */
+   RDM_POWER_STATE_FULL_OFF = 0x00,
+   /** @brief Reduced power mode, may require device reset to return to normal operation.
+    * Device still responds to messages. */
+   RDM_POWER_STATE_SHUTDOWN = 0x01,
+   /** @brief Reduced power mode, device can return to NORMAL without a reset.
+    * Device still responds to messages. */
+   RDM_POWER_STATE_STANDBY = 0x02,
+   /** @brief Normal operating mode. */
+   RDM_POWER_STATE_NORMAL = 0xFF
+   /** @brief Manufacturer-Specific States 0x80-0xDF */
+} rdm_power_state_t;
+
 /** @brief Responders and controllers identify themselves with a 48-bit Unique
  * ID (UID). The UID consists of a 16-bit ESTA assigned manufacturer ID with a
  * 32-bit device ID.*/
@@ -831,8 +866,9 @@ typedef struct __attribute__((packed)) rdm_dmx_personality_t {
 
 /** @brief Parameter for use with RDM device info requests.*/
 typedef struct __attribute__((packed)) rdm_device_info_t {
-  uint8_t : 8;  // RDM major version. Is always 1.
-  uint8_t : 8;  // RDM minor version. Is always 0.
+  uint8_t rdm_major: 8;  // RDM major version. Is always 1. RCD: added slot names
+  uint8_t rdm_minor: 8;  // RDM minor version. Is always 0.
+//   uint16_t rdm_protocol;  // workaround
   /** @brief This field identifies the device model ID of the root device or
      sub-device. The manufacturer shall not use the same ID to represent more
      than one unique model type.*/

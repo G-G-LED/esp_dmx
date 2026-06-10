@@ -107,19 +107,24 @@ static size_t rdm_format_encode(void *restrict dest,
   return encoded;
 }
 
-bool DMX_ISR_ATTR rdm_read_header(dmx_port_t dmx_num, rdm_header_t *header) {
+#define RDM_CHECKSUM_SIZE  2
+
+bool DMX_ISR_ATTR rdm_read_header(dmx_port_t dmx_num, rdm_header_t *header, dmx_packet_t *packet) {
   DMX_CHECK(dmx_num < DMX_NUM_MAX, 0, "dmx_num error");
   DMX_CHECK(dmx_driver[dmx_num] != NULL, 0, "driver is not installed");
+  // DMX_CHECK(packet != NULL, 0, "packet NULL pointer");
 
   dmx_driver_t *const driver = dmx_driver[dmx_num];
 
-  const uint8_t *data = driver->dmx.data;
+  // The problem seems to be that somehow the driver's data is different when we get here
+  // than when we read some of it into packet in dmx_receive_num.
+  const uint8_t *data = (NULL != packet) ? packet->data : driver->dmx.data;
   uint16_t checksum = 0;
 
   // Check if packet is standard RDM packet or RDM discovery response packet
-  if (*(uint16_t *)data == (RDM_SC | (RDM_SUB_SC << 8))) {
+  if ((*(uint16_t *)data == (RDM_SC | (RDM_SUB_SC << 8))) || ((NULL != packet) && (RDM_SC == packet->sc))) {
     // Verify checksum
-    const uint8_t message_len = data[2];
+    const uint8_t message_len = (NULL != packet) ? (packet->size - RDM_CHECKSUM_SIZE) : data[2];
     for (int i = 0; i < message_len; ++i) {
       checksum += data[i];
     }

@@ -20,8 +20,8 @@ menu "DMX/RDM Configuration"
             
     config RDM_DEVICE_UID_MAN_ID
         hex "RDM manufacturer ID"
-        range 0x0001 0x7fff
-        default 0x05e0
+        range 0x0001 0xffff
+        default 0xe100
         help
             Set the default manufacturer ID for this device's UID. The valid
             range is 0x0001 to 0x7fff (inclusive).
@@ -69,7 +69,7 @@ menu "DMX/RDM Configuration"
     
     config RDM_MANUFACTURER_LABEL
         string "The default RDM manufacturer label"
-        default "esp_dmx"
+        default "G&G"
         help
           This is the default value which is used in responses to requests for 
           RDM_PID_MANUFACTURER_LABEL. This value should be no more than 32 

@@ -93,7 +93,7 @@ size_t rdm_send_request(dmx_port_t dmx_num, const rdm_request_t *request,
 
   // Attempt to receive the RDM response
   dmx_packet_t packet;
-  dmx_receive(dmx_num, &packet, dmx_ms_to_ticks(23));
+  dmx_receive(dmx_num, &packet, dmx_ms_to_ticks(23));   //  ??? USE dmx_receive_num INSTEAD ???  
   if (ack != NULL) {
     ack->err = packet.err;
     ack->size = packet.size;
@@ -114,7 +114,7 @@ size_t rdm_send_request(dmx_port_t dmx_num, const rdm_request_t *request,
   }
 
   // Return early if the response checksum was invalid
-  if (!rdm_read_header(dmx_num, &header)) {
+  if (!rdm_read_header(dmx_num, &header, &packet)) {                   // THIS ONE SHOULD BE FINE  !!!!!
     dmx_write(dmx_num, old_data, packet_size);  // Write old data back
     xSemaphoreGiveRecursive(driver->mux);
     if (ack != NULL) {

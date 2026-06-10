@@ -41,7 +41,7 @@ typedef void (*rdm_callback_t)(dmx_port_t dmx_num, rdm_header_t *request_header,
  * @return true if a response packet was sent.
  * @return false if a response packet was not sent.
  */
-bool rdm_send_response(dmx_port_t dmx_num);
+bool rdm_send_response(dmx_port_t dmx_num);  //, dmx_packet_t *packet);
 
 #ifdef __cplusplus
 }

@@ -16,6 +16,10 @@
 #include "esp_mac.h"  // TODO: Make this hardware agnostic
 #endif
 
+// Circumventing the Kconfig process...
+#undef CONFIG_RDM_DEVICE_UID_MAN_ID
+#define CONFIG_RDM_DEVICE_UID_MAN_ID 0x4747
+
 #ifdef CONFIG_RDM_DEVICE_UID_MAN_ID
 /** @brief This is the RDM Manufacturer ID used with this library. It may be set
  * using the Kconfig file. The default value is 0x05e0.*/
@@ -39,6 +43,9 @@
  * is a function of this device's MAC address.*/
 #define RDM_UID_DEVICE_ID (0xffffffff)
 #endif
+
+#undef CONFIG_RDM_MANUFACTURER_LABEL
+#define CONFIG_RDM_MANUFACTURER_LABEL  "G&G LED"
 
 #ifdef CONFIG_RDM_MANUFACTURER_LABEL
 /** @brief This is the default manufacturer label for the RDM responder. Its
@@ -134,7 +141,11 @@ bool dmx_driver_install(dmx_port_t dmx_num, const dmx_config_t *config,
   // Set the device ID based on the device's MAC address
   uint8_t mac[8];
   esp_efuse_mac_get_default(mac);
-  driver->uid.dev_id = bswap32(*(uint32_t *)(mac + 2));
+  // driver->uid.dev_id = bswap32(*(uint32_t *)(mac + 2));
+  // RCD 6/25/25 to work around Imp Squirrel treating every 32-bit integer as signed:
+  // Clear the MSB so the Imp will see a non-negative number.
+  driver->uid.dev_id = 0x7fffffff & bswap32(*(uint32_t *)(mac + 2));
+  // driver->uid.dev_id = 0x9222115; // was hardcoded to get around Device Info issue
 #else
   // Set the device ID based on what the user set in the kconfig
   driver->uid.dev_id = RDM_UID_DEVICE_UID;
@@ -211,7 +222,7 @@ bool dmx_driver_install(dmx_port_t dmx_num, const dmx_config_t *config,
   if (config->queue_size_max > 0) {
     rdm_register_queued_message(dmx_num, config->queue_size_max, NULL, NULL);
   }
-  rdm_register_manufacturer_label(dmx_num, RDM_MANUFACTURER_LABEL, NULL, NULL);
+  rdm_register_manufacturer_label(dmx_num, (char *)RDM_MANUFACTURER_LABEL, NULL, NULL);
   if (uses_dmx > 0) {
     rdm_register_dmx_personality(dmx_num, personality_count, NULL, NULL);
     rdm_register_dmx_personality_description(dmx_num, personality_description,

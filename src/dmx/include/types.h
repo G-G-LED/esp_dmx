@@ -311,6 +311,8 @@ typedef struct dmx_packet_t {
   size_t size;
   /** @brief True if the received packet is RDM.*/
   bool is_rdm;
+  /** @brief Pointer to data that's saved safely outside the driver.*/
+  uint8_t *data;
 } dmx_packet_t;
 
 /** @brief Metadata for received DMX packets. For use in the DMX sniffer.*/

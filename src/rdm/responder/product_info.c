@@ -12,6 +12,7 @@
  * other fields in RDM_PID_DEVICE_INFO can be computed at call-time.
  */
 struct rdm_product_info_t {
+  // uint16_t rdm_protocol;  // A workaround in case the constants in the format don't work
   uint16_t model_id;  // The model ID of the device. Unique per manufacturer.
   uint16_t product_category;     // Enumerated in rdm_product_category_t.
   uint32_t software_version_id;  // The unique software verion id of the device.
@@ -68,6 +69,7 @@ bool rdm_register_device_info(dmx_port_t dmx_num, uint16_t model_id,
 
   // Add the parameter dynamically - only the product info is stored
   struct rdm_product_info_t product_info = {
+      // .rdm_protocol = 0x0100,
       .model_id = model_id,
       .product_category = product_category,
       .software_version_id = software_version_id};
@@ -83,7 +85,8 @@ bool rdm_register_device_info(dmx_port_t dmx_num, uint16_t model_id,
       .ds = RDM_DS_NOT_DEFINED,
       .get = {.handler = rdm_rhd_get_device_info,
               .request.format = NULL,
-              .response.format = "x01x00wwdwbbwwb$"},
+              // .response.format = "x01x00wwdwbbwwb$"},
+              .response.format = "wwwdwbbwwb$"},
       .set = {.handler = NULL, .request.format = NULL, .response.format = NULL},
       .pdl_size = 0,
       .max_value = 0,
@@ -96,16 +99,22 @@ bool rdm_register_device_info(dmx_port_t dmx_num, uint16_t model_id,
   return rdm_callback_set(dmx_num, RDM_SUB_DEVICE_ROOT, pid, cb, context);
 }
 
-size_t rdm_get_device_info(dmx_port_t dmx_num, rdm_device_info_t *device_info) {
+size_t gdi_counter = 0;
+
+size_t rdm_get_device_info(dmx_port_t dmx_num, rdm_device_info_t *device_info)
+{
   DMX_CHECK(dmx_num < DMX_NUM_MAX, 0, "dmx_num error");
   DMX_CHECK(device_info != NULL, 0, "device_info is null");
   DMX_CHECK(dmx_driver_is_installed(dmx_num), 0, "driver is not installed");
+
+  gdi_counter++;
 
   // Get the product info for the device
   const struct rdm_product_info_t *product_info =
       dmx_parameter_get_data(dmx_num, RDM_SUB_DEVICE_ROOT, RDM_PID_DEVICE_INFO);
 
   if (product_info != NULL) {
+    // device_info->rdm_protocol = product_info->rdm_protocol;
     device_info->model_id = product_info->model_id;
     device_info->product_category = product_info->product_category;
     device_info->software_version_id = product_info->software_version_id;
